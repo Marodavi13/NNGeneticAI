@@ -78,9 +78,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UFUNCTION(BlueprintImplementableEvent)
-		void LoadGame();
 	//First call to start the simulation
 	void StartSimulation();
 	// Starts the simulation of the next Specimen
@@ -92,6 +89,7 @@ protected:
 	UFUNCTION(BlueprintNativeEvent)
 	float CalculateFitness(float StepTime);
 	virtual float CalculateFitness_Implementation(float StepTime);
+
 
 	//Stores the needed components
 	virtual void StorePawnComponents();
@@ -134,16 +132,13 @@ public:
 		EFunction NeuralNetworkFunction;
 	// Generation running
 	UPROPERTY(BlueprintReadOnly,					Category = "Population | Specimen")
-		uint8 CurrentGeneration = 1;
-
-
+		uint8 CurrentGeneration;
 	// Spawned Pawn
 	UPROPERTY(BlueprintReadOnly,					Category = "Population | Pawn")
 		APawn* SpecimenPawn;
 	// Neural input of the Spawned pawn
 	UPROPERTY(BlueprintReadOnly,					Category = "Population | Pawn")
 		UNeuralInputComponent* SpecimenNeuralInput;
-
 	// All the Average fitness until this generation
 	UPROPERTY(BlueprintReadOnly,					Category = "Population | Stats")
 		TArray<float> AverageFitnessByGeneration;
@@ -156,22 +151,29 @@ protected:
 	// Current Population
 	UPROPERTY(BlueprintReadOnly,					Category = "Population")
 		UPopulation* Population;
+	// Best Specimens to keep each generation
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,		Category = "Population | Evolution")
 		uint8 NumberOfSpecimensToKeep;
+	// Number of children of the fittest specimens
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,		Category = "Population | Evolution")
 		uint8 NumberOfCrosses;
+	// Chance (0-100) to mutate synapse
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,		Category = "Population | Evolution", meta = (ClampMin = "0", ClampMax = "100"))
 		uint8 SynapseMutationChance;
+	// Chance (0-100) to mutate bias
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,		Category = "Population | Evolution", meta = (ClampMin = "0", ClampMax = "100"))
 		uint8 BiasMutationChance;
+	// How much will it mutate
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,		Category = "Population | Evolution", meta = (ClampMin = "0", ClampMax = "1"))
 		float MutationStep;
 
 	// Class of the Pawn to spawn
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,	Category = "Population | Pawn")
 		TSubclassOf<APawn> SpecimenPawnClass;
+	// Functions called by the NN
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,		Category = "Population | Pawn")
 		TArray<FOutputFunction> OutputFunctions;
+	// Possess the pawn with the 1st player controller or spawn default
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Population | Pawn")
 		bool bIsPossesedByFirstPlayerController;
 	//Number of specimens in this population
@@ -182,10 +184,10 @@ protected:
 		USpecimen* CurrentSpecimen;
 	// Index of the CurrentSpecimen
 	UPROPERTY(BlueprintReadOnly,					Category = "Population | Specimen")
-		uint8 CurrentSpecimenIndex = 0;
+		uint8 CurrentSpecimenIndex;
 	//Time elapsed between the end of the run and the next one
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Population | Simulation")
-		float TimeBetweenRuns = 1.f;
+		float TimeBetweenRuns;
 	// If the specimen gets lower fitness than this one it end his run
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,		Category = "Fitness")
 		float MinFitness;
@@ -195,13 +197,15 @@ protected:
 	// Time that has to pass without improvement to end its run
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,		Category = "Fitness")
 		float NoImprovementTimeout;
-	UPROPERTY(BlueprintReadOnly, Category = "Fitness")
-		float CurrentRunTime = 0.f;
+	// Time spent by the current specimen
+	UPROPERTY(BlueprintReadOnly, Transient, Category = "Fitness")
+		float CurrentRunTime;
+	// Where will spawn the Pawn each round
 	UPROPERTY(BlueprintReadOnly, Category = "Population | Pawn")
 		FTransform SpawningTransform;
 #if WITH_EDITOR
 	UPROPERTY(EditAnywhere, BlueprintReadWrite,		Category = "Debug")
-		bool bIsDebugActivated = false;
+		bool bIsDebugActivated;
 #endif
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")

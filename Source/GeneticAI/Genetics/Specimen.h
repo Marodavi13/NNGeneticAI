@@ -17,7 +17,9 @@ class GENETICAI_API USpecimen : public UObject
 public:
 	//Called when the run has ended, checks if specimen should mutate
 	void EndRun(uint8 UnderperformedGenerationsUntilMutation);
+	// Initializes specimen variables
 	void InitSpecimen(uint8 Number, ANeuralNetworkManager& NeuralnetworkManager);
+	// Resets specimen variables to 0
 	void ResetSpecimen(uint8 Generation, uint8 NewNumberOfSpecimen);
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Neural Network")
@@ -28,9 +30,6 @@ public:
 	// Fitness of this specimen from last generation
 	UPROPERTY(BlueprintReadOnly, Category = "Fitness")
 		float PreviousFitness	= 0.f;
-	// Generations without improvement
-	UPROPERTY(BlueprintReadOnly, Category = "Mutation")
-		uint8 UnderperformedGenerations = 0;
 	// Belonged generation
 	UPROPERTY(BlueprintReadOnly, Category = "Generation")
 		uint8 GenerationBorn = 0;

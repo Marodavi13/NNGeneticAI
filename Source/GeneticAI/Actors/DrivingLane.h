@@ -21,7 +21,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+	// Spline that marks the average wacing path
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spline")
 		USplineComponent* Spline;
 

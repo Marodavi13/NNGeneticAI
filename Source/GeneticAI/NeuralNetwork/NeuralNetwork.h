@@ -32,6 +32,7 @@ public:
 	// All the Neurons
 	UPROPERTY(BlueprintReadOnly, Category = "Neural Network Structure")
 		TArray<UNeuron*> Neurons;
+	// Size of Neurons
 	UPROPERTY(BlueprintReadOnly, Category = "Neural Network Structure")
-		uint8 NumberOfNeurons = 0;
+		uint8 NumberOfNeurons;
 };

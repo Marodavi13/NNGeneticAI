@@ -20,10 +20,13 @@ public:
 	// Get the Weighted value to add to the next neuron
 	float GetWeightedValue() const;
 public:
+	// Origin
 	UPROPERTY(BlueprintReadOnly, Category = "Neurons")
 		UNeuron* NeuronFrom;
+	//Destination
 	UPROPERTY(BlueprintReadOnly, Category = "Neurons")
 		UNeuron* NeuronTo;
+	//Weight of this Synapse
 	UPROPERTY(BlueprintReadOnly, Category = "Neurons")
 		float Weight;
 };

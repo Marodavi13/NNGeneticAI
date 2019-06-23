@@ -13,13 +13,19 @@ ADrivingNeuralNetworkManager::ADrivingNeuralNetworkManager()
 {
 	LapValidator = CreateDefaultSubobject<UBoxComponent>("Lap Validator");
 	LapValidator->SetupAttachment(Root);
+	DistanceConstant = 1.f;
+	LapConstant = 1000.f;
+	bIsIncreaseLapAllowed = false;
+	SpeedConstant = 1.f;
+	TimeConstant = 1.f;
+	MaxNumberOfLaps = 2;
 }
 
 void ADrivingNeuralNetworkManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if(IsValid(SpecimenPawn))
-	PRINT_ST("Spawned Location: " + SpecimenPawn->GetActorLocation().ToString(), DeltaTime, SUCCESS);
+	//if(IsValid(SpecimenPawn))
+	//PRINT_ST("Spawned Location: " + SpecimenPawn->GetActorLocation().ToString(), DeltaTime, SUCCESS);
 
 }
 
@@ -93,24 +99,36 @@ void ADrivingNeuralNetworkManager::ResetPawnProperties()
 
 float ADrivingNeuralNetworkManager::CalculateFitness_Implementation(float StepTime)
 {
+	/*
+	Not happy with this algorithm, it works but it can retrieve optimal results if done better
+	*/
+
+	// Get Velocity
 	FVector Velocity = SpecimenPawn->GetVelocity();
 	Velocity.Z = 0.f;
 	float Speed = Velocity.Size2D();
 
+	// Add the distance traveled
 	DistanceTraveled += Speed * StepTime;
-
+	// Get Lenght along the driving spline
 	float CurrentSplineLenght = FindDistanceAlongSplineClosestToWorldLocation(*DrivingLane->Spline, SpecimenPawn->GetActorLocation());
-	Velocity.Normalize();
 	FVector Direction = DrivingLane->Spline->GetDirectionAtDistanceAlongSpline(CurrentSplineLenght, ESplineCoordinateSpace::World);
 	Direction.Normalize();
+	Velocity.Normalize();
+	// Get relation between my direction and suboptimal direction
 	float dot = FVector::DotProduct(Direction, Velocity);
+	// Add Speed scaled with the dot
 	SpeedSum += Speed * dot;
+	// Increase counter
 	++SpeedCount;
-	DrawDebugLine(GetWorld(), SpecimenPawn->GetActorLocation(), SpecimenPawn->GetActorLocation() + (DrivingLane->Spline->GetDirectionAtDistanceAlongSpline(CurrentSplineLenght, ESplineCoordinateSpace::World)), INFO, false, StepTime * 1.1f, 0, 10.f);
+	//DrawDebugLine(GetWorld(), SpecimenPawn->GetActorLocation(), SpecimenPawn->GetActorLocation() + (DrivingLane->Spline->GetDirectionAtDistanceAlongSpline(CurrentSplineLenght, ESplineCoordinateSpace::World)), INFO, false, StepTime * 1.1f, 0, 10.f);
+	
+	//Calculate Fitness 
+
 	float DistanceFitness = DistanceTraveled * DistanceConstant /* FMath::Sign(SpeedSum)*/ + CurrentNumberOfLaps * DrivingLane->Spline->GetSplineLength() / (DistanceTraveled + 1) * LapConstant;  //(CurrentSplineLenght + CurrentNumberOfLaps * DrivingLane->Spline->GetSplineLength()) * DistanceConstant / (DistanceTraveled + 1) * FMath::Sign(SpeedSum);
 	float SpeedFitness = SpeedSum / SpeedCount / (SpecimenPawnMovement->MaxSpeed)  * SpeedConstant;
 	float TimeFitness = CurrentRunTime * TimeConstant;
-	PRINT_ST("Current Speed: " + DrivingLane->Spline->GetDirectionAtDistanceAlongSpline(CurrentSplineLenght, ESplineCoordinateSpace::World).ToString(), StepTime, INFO);
+	//PRINT_ST("Current Speed: " + DrivingLane->Spline->GetDirectionAtDistanceAlongSpline(CurrentSplineLenght, ESplineCoordinateSpace::World).ToString(), StepTime, INFO);
 
 	return  DistanceFitness * SpeedFitness - TimeFitness;
 }

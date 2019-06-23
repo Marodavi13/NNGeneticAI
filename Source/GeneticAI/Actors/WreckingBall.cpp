@@ -33,6 +33,7 @@ AWreckingBall::AWreckingBall()
 	MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>("Movement");
 	
 	bUseControllerRotationYaw = true;
+	TurnSpeed = 45.f;
 }
 
 // Called when the game starts or when spawned
@@ -44,13 +45,7 @@ void AWreckingBall::BeginPlay()
 	{
 		OnSpecimenCollision.AddDynamic(Manager, &ANeuralNetworkManager::EndSpecimenSimulation);
 	}
-
-	if (IsValid(MovementComponent))
-	{
-		PRINT_ST("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 2.f, ERROR);
-	}
 	Super::BeginPlay();
-
 }
 
 void AWreckingBall::TurnRight(float Value)
@@ -81,6 +76,6 @@ void AWreckingBall::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	PRINT_ST("Controller Rotation: " + GetControlRotation().ToString(), DeltaTime, INFO);
+	//PRINT_ST("Controller Rotation: " + GetControlRotation().ToString(), DeltaTime, INFO);
 }
 

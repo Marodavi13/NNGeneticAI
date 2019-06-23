@@ -27,12 +27,12 @@ void UPopulation::EvolveSpecimens(uint8 NumberOfSpecimensToKeep, uint8 NumberOfS
 	TArray<USpecimen*>NewSpecimens;
 	//Select bthe best specimens
 	Selection(NewSpecimens, NumberOfSpecimensToKeep);
-	// Make the have children
+	// Make them have children
 	Crossover(NewSpecimens, NumberOfSpecimensToKeep, NumberOfSpecimensToCross, CurrentGeneration);
 	// Mutate all the specimens
 	Mutation(NewSpecimens, SynapseMutationChance, BiasMutationChance, MutationStep);
 	uint8 NumberOfSpecimens = Specimens.Num();
-	// Randomize the untouched specimens
+	// Randomize the left specimens
 	for (uint8 i = NumberOfSpecimensToKeep + NumberOfSpecimensToCross; i < NumberOfSpecimens; ++i)
 	{
 		Specimens[i]->NeuralNetwork->Randomize();
@@ -41,7 +41,7 @@ void UPopulation::EvolveSpecimens(uint8 NumberOfSpecimensToKeep, uint8 NumberOfS
 		NewSpecimens[i]->GenerationBorn = CurrentGeneration;
 	}
 	Specimens = NewSpecimens;
-	PRINT_ST("Size: " + FString::FromInt(Specimens.Num()), 5.f, INFO);
+	//PRINT_ST("Size: " + FString::FromInt(Specimens.Num()), 5.f, INFO);
 }
 
 

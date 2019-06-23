@@ -28,8 +28,9 @@ ANeuralNetworkManager::ANeuralNetworkManager()
 	// Functions to be called
 	OutputFunctions.Add(FOutputFunction("MoveForward", -1.f, 1.f));
 	OutputFunctions.Add(FOutputFunction("TurnRight", -1.f, 1.f));
-
-
+	TimeBetweenRuns = 1.f;
+	CurrentGeneration = 1;
+	bIsDebugActivated = false;
 }
 
 // Called when the game starts or when spawned
@@ -47,7 +48,7 @@ void ANeuralNetworkManager::BeginPlay()
 		
 		if (SetSpawningTransform())
 		{
-			LoadGame();
+			
 			if(TimeBetweenRuns <= 0.f)
 			{
 				TimeBetweenRuns = 0.5f;

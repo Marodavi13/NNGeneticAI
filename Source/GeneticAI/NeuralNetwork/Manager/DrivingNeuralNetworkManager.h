@@ -35,7 +35,9 @@ protected:
 	virtual void ResetPawnProperties() override;
 	// Calculates the CurrentFitness
 	virtual float CalculateFitness_Implementation(float StepTime) override;
+	// Check if it should end the current run
 	virtual bool CheckEndConditions() const override;
+	// Move the pawn to spawn position -- Currently in BP because bugs
 	UFUNCTION(BlueprintImplementableEvent)
 		void MovePawnToTargetPoint();
 protected:
@@ -50,28 +52,35 @@ protected:
 		ADrivingLane* DrivingLane;
 	// Constant to multiply the Direction factor
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fitness | Distance")
-		float DistanceConstant = 1.f;
+		float DistanceConstant;
+	// Constant to multiply the Lap factor
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fitness | Distance")
-		float LapConstant = 1000.f;
+		float LapConstant;
+	// Can Increase the lap is passes through the finish lane
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Population | Specimen")
-		bool bIsIncreaseLapAllowed = false;
+		bool bIsIncreaseLapAllowed;
 	// Sum of all the speeds
-	UPROPERTY(BlueprintReadOnly, Category = "Fitness | Speed")
-		float SpeedSum = 0.f;
+	UPROPERTY(BlueprintReadOnly,Transient, Category = "Fitness | Speed")
+		float SpeedSum;
 	// Times that we have sum the Speed
-	UPROPERTY(BlueprintReadOnly, Category = "Fitness | Speed")
-		int32 SpeedCount = 0;
+	UPROPERTY(BlueprintReadOnly, Transient, Category = "Fitness | Speed")
+		int32 SpeedCount;
 	// Constant to multiply the Speed factor
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fitness | Speed")
-		float SpeedConstant = 1.f;
+		float SpeedConstant;
+	// Constant to multiply the Time factor
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fitness | Time")
-		float TimeConstant = 1.f;
+		float TimeConstant;
+	// Number of laps to end the simulation
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Population | Specimen")
-		uint8 MaxNumberOfLaps = 2;
-	UPROPERTY(BlueprintReadOnly, Category = "Population | Specimen")
-		uint8 CurrentNumberOfLaps = 0;
+		uint8 MaxNumberOfLaps;
+	//Current Number of laps
+	UPROPERTY(BlueprintReadOnly, Transient,Category = "Population | Specimen")
+		uint8 CurrentNumberOfLaps;
+	// Movement component of the pawn
 	UPROPERTY(BlueprintReadOnly, Category = "Population | Pawn")
 		UFloatingPawnMovement* SpecimenPawnMovement;
+	// Trigger that validates the increase oh the current Lap
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 		UBoxComponent* LapValidator;
 

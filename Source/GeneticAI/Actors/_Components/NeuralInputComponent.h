@@ -32,6 +32,7 @@ public:
 	// Inputs sent to the Neural Network
 	UPROPERTY(BlueprintReadOnly, Category = "Inputs")
 		TArray<float> Inputs;
+	//manager
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs")
 		ANeuralNetworkManager* Manager;
 		

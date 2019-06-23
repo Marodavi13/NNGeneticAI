@@ -20,22 +20,12 @@ void USpecimen::ResetSpecimen(uint8 Generation, uint8 NewNumberOfSpecimen)
 	PreviousFitness = 0.f;
 	GenerationBorn = Generation;
 	NumberOfSpecimen = NewNumberOfSpecimen;
-	UnderperformedGenerations = 0;
 }
 
 
 void USpecimen::EndRun(uint8 UnderperformedGenerationsUntilMutation)
 {
-	//If I have improved set UnderperformedGenerations to 0
-	if (Fitness >= PreviousFitness)
-	{
-		UnderperformedGenerations = 0;
-	}
-	//If not rise it
-	else
-	{
-		++UnderperformedGenerations;
-	}
+
 }
 
 

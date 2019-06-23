@@ -24,12 +24,13 @@ class GENETICAI_API AWreckingBall : public APawn
 public:	
 	// Sets default values for this actor's properties
 	AWreckingBall();
-	// Called for moving in Y axis
+	// Called for turning
 	UFUNCTION(BlueprintCallable)
 	void TurnRight(float Value);
 	// Called for moving in X axis
 	UFUNCTION(BlueprintCallable)
 	void MoveForward(float Value);
+	// Callback Overlap
 	UFUNCTION()
 		void OnBeginOverlap(class UPrimitiveComponent* HitComp = nullptr, class AActor* OtherActor = nullptr, class UPrimitiveComponent* OtherComp = nullptr, int32 OtherBodyIndex = 0, bool bFromSweep = false, const FHitResult& SweepResult = FHitResult());
 
@@ -40,18 +41,22 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	//Torque added to the Ball
+	//Speed turning
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turn")
-		float TurnSpeed = 90.f;
+		float TurnSpeed;
+	// Overlap Sphere
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 		USphereComponent* SphereCollision;
 	//Mesh 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 		UStaticMeshComponent* Mesh;
+	// Camera
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 		UCameraComponent* Camera;
+	//Movement Comp
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UFloatingPawnMovement* MovementComponent;
+	// COmponent for the NN
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UNeuralInputComponent* NeuralInput;
 	// Delegates
